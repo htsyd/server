@@ -9,7 +9,4 @@ router.post('/googleLogin', controller.googleLogin)
 router.use(authentication)
 router.get('/news', controller.fetchNews)
 
-
-
-
 module.exports = router
