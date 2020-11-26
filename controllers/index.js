@@ -1,6 +1,7 @@
 const { User } = require('../models')
 const PasswordHelper = require('../helpers/passwordhelper')
 const JwtHelper = require('../helpers/jwthelper')
+const axios = require('axios')
 
 class Controller {
 
@@ -52,8 +53,29 @@ class Controller {
   static googleLogin(req, res, next) {
 
   }
-  static fetchNews(req, res, next) {
-
+  static async fetchNews(req, res, next) {
+    console.log('di controller')
+    try{
+      const news = await axios({
+        url: 'https://api.nytimes.com/svc/news/v3/content/all/all.json?api-key=ND8jFZ5Bz1EClBJtvt9AZbHf3uU6PIDu',
+        method: 'GET',
+        params: {
+          'api-key': 'ND8jFZ5Bz1EClBJtvt9AZbHf3uU6PIDu'
+        }
+      })
+      const data = news.data.results.map(element => {
+        const obj = {
+          title: element.title,
+          abstract: element.abstract,
+          url: element.url,
+          thumbnail_standard: element.thumbnail_standard
+        }
+        return obj
+      });
+      res.status(200).json(data)
+    } catch(error){
+      next(error)
+  }
   }
 
 }
