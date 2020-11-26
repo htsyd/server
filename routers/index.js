@@ -8,6 +8,7 @@ router.post('/register', controller.register)
 router.post('/googleLogin', controller.googleLogin)
 router.use(authentication)
 router.get('/news', controller.fetchNews)
+router.get('/covid', controller.fetchCovidNews)
 router.get('/domnews', controller.domesticNews)
 
 module.exports = router

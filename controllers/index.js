@@ -54,14 +54,10 @@ class Controller {
 
   }
   static async fetchNews(req, res, next) {
-    console.log('di controller')
     try{
       const news = await axios({
-        url: 'https://api.nytimes.com/svc/news/v3/content/all/all.json?api-key=ND8jFZ5Bz1EClBJtvt9AZbHf3uU6PIDu',
-        method: 'GET',
-        params: {
-          'api-key': 'ND8jFZ5Bz1EClBJtvt9AZbHf3uU6PIDu'
-        }
+        url: `https://api.nytimes.com/svc/news/v3/content/all/all.json?api-key=${process.env.NYAPIKEY}`,
+        method: 'GET'
       })
       const data = news.data.results.map(element => {
         const obj = {
@@ -72,7 +68,32 @@ class Controller {
         }
         return obj
       });
-      res.status(200).json(data)
+      res.status(200).json(data[Math.floor(Math.random()*data.length)])
+    } catch(error){
+      next(error)
+    }
+  }
+
+  static async fetchCovidNews(req, res, next) {
+    try{
+      const news = await axios({
+        url: `https://api.covid19api.com/summary`,
+        method: 'GET'
+      })
+      let indonesiaNews
+      news.data.Countries.forEach(element => {
+        if(element.Country == 'Indonesia') {
+          indonesiaNews = {
+            NewConfirmed: element.NewConfirmed,
+            TotalConfirmed: element.TotalConfirmed,
+            NewDeaths: element.NewDeaths,
+            TotalDeaths: element.TotalDeaths,
+            NewRecovered: element.NewRecovered,
+            TotalRecovered: element.TotalRecovered
+          }
+        }
+      });
+      res.status(200).json(indonesiaNews)
     } catch(error){
       next(error)
     }
