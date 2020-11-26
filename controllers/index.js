@@ -13,8 +13,8 @@ class Controller {
       })
       if (!user) {
         throw {
-          status: 400,
-          message: "Invalid Email/Password"
+          status: 404,
+          message: "Invalid Account!"
         }
       } else if (PasswordHelper.comparePassword(req.body.password, user.password)) {
         const object = {
@@ -36,13 +36,23 @@ class Controller {
     }
   }
 
-  static register(res, req, next) {
+  static async register(req, res, next) {
+    try {
+      const data = await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password
+      })
+      res.status(200).json({ id: data.id, name: data.name, email: data.email})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static googleLogin(req, res, next) {
 
   }
-  static googleLogin(res, req, next) {
-
-  }
-  static fetchNews(res, req, next) {
+  static fetchNews(req, res, next) {
 
   }
 

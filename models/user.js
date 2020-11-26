@@ -1,4 +1,5 @@
 'use strict';
+const PasswordHelper = require('../helpers/passwordhelper')
 const {
   Model
 } = require('sequelize');
@@ -14,12 +15,35 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { message: `Name can't be empty` }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { message: `Email can't be empty`}
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { message: `Password can't be empty`}
+      }
+    }
   }, {
     sequelize,
     modelName: 'User',
   });
+
+  User.addHook('beforeCreate', (user) => {
+    user.password = PasswordHelper.hashPassword(user.password)
+  })
+
   return User;
 };
