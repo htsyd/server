@@ -71,7 +71,7 @@ class Controller {
       res.status(200).json(data[Math.floor(Math.random()*data.length)])
     } catch(error){
       next(error)
-  }
+    }
   }
 
   static async fetchCovidNews(req, res, next) {
@@ -96,9 +96,29 @@ class Controller {
       res.status(200).json(indonesiaNews)
     } catch(error){
       next(error)
-  }
+    }
   }
 
+  static async domesticNews(req, res, next) {
+    try {
+      const news = await axios({
+        url: 'https://news.developeridn.com/nasional',
+        method: 'GET'
+      })
+      const result = news.data.data.map(e => {
+        const temp = {
+          title: `Berita ${e.tipe}`,
+          abstract: e.judul,
+          url: e.link,
+          thumbnail_standard: e.poster
+        }
+        return temp
+      })
+      res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = Controller;
