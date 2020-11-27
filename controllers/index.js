@@ -115,7 +115,7 @@ class Controller {
         }
         return temp
       })
-      res.status(200).json(result)
+      res.status(200).json(result[Math.floor(Math.random()*result.length)])
     } catch (error) {
       next(error)
     }
