@@ -1,134 +1,145 @@
 # HOW TO START YOUR DAY APP
 
+##Restful endpoints
+<!-- --- -->
+# URL
+```
+Client URL : http://localhost:5500
+Server URL : http://localhost:3000
+```
+### POST/register
+>Create User
 
 
+_Request Header_
+```
+not needed
+```
 
+_Request Body_
+```
+{
 
+  "name": "<User's Name>",
+  "email": "<User's email>",
+  "password": "<User's password>"
 
+}
+```
 
+_Response(201)_
+```
+{
 
+  "name": "Candra",
+  "email": "Candra@gmail.com",
+  "password": "Candra"
 
+}
+```
+_Response(400- bad request)_
+```
+{
 
+  "message": "Name can't be empty,Email can't be empty,Password can't be empty"
 
+}
+```
 
+_Response (500 - Internal server error)_
+```
+{
 
+  "message": "Internal server error"
 
+}
+```
 
+### POST/login
 
+>Login User
 
 
+_Request Header_
+```
+not needed
+```
 
+_Request Body_
+```
+{
 
+  "email": "<User's email>",
+  "password": "<User's password>"
 
+}
+```
+_Response(200)_
+```
+{
 
+  "access_token": token
 
+}
+```
+_Response(400- bad request)_
+```
+{
 
+  "message": "Name can't be empty,Email can't be empty,Password can't be empty"
 
+}
+```
 
+_Response(404- Not Found)_
+```
+{
 
+  "message": "Invalid Account!!"
 
+}
+```
 
+_Response (500 - Internal server error)_
+```
+{
 
+  "message": "Internal server error"
 
+}
+```
+### POST/google-sign-in
 
+>Google Sign IN User
 
+_Request Header_
+```
+not needed
+```
 
+_Request Body_
+```
+{
 
+  "id_token": "id_token";
 
+}
+```
 
+_Response(200)_
+```
+Google's Payload
+```
 
 
+_Response (500 - Internal server error)_
+```
+{
 
+  "message": "Error undescribable"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
+```
 
 ### GET /news
 
@@ -160,7 +171,7 @@ _Example Response (200)_
 }
 ```
 
-_Response (500 - Bad Request)_
+_Response (500 - Internal server error)_
 ```
 {
 
@@ -202,7 +213,7 @@ _Example Response (200)_
 }
 ```
 
-_Response (500 - Bad Request)_
+_Response (500 - Internal server error)_
 ```
 {
   
@@ -240,7 +251,7 @@ _Example Response (200)_
 }
 ```
 
-_Response (500 - Bad Request)_
+_Response (500 - Internal server error)_
 ```
 {
   
