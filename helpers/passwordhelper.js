@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 class PasswordHelper {
 
   static hashPassword(plain) {
-    const salt = bcrypt.genSaltSync(process.env.SALT)
+    const salt = bcrypt.genSaltSync(+process.env.SALT)
 
     return bcrypt.hashSync(plain, salt)
   }
