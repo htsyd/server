@@ -113,29 +113,34 @@ class Controller {
     }
   }
 
-  static async fetchCovidNews(req, res, next) {
-    try{
-      const news = await axios({
-        url: `https://api.covid19api.com/summary`,
-        method: 'GET'
-      })
-      let indonesiaNews
-      news.data.Countries.forEach(element => {
-        if(element.Country == 'Indonesia') {
-          indonesiaNews = {
-            NewConfirmed: element.NewConfirmed,
-            TotalConfirmed: element.TotalConfirmed,
-            NewDeaths: element.NewDeaths,
-            TotalDeaths: element.TotalDeaths,
-            NewRecovered: element.NewRecovered,
-            TotalRecovered: element.TotalRecovered
+  static fetchCovidNews(req, res, next) {
+    axios({
+      url: `https://api.covid19api.com/summary`,
+      method: 'GET'
+    })
+      .then(news => {
+        let indonesiaNews = {}
+        let kondisi = false
+        console.log(news.data.Countries)
+        news.data.Countries.forEach(element => {
+          if (element.Country === 'Indonesia') {
+            kondisi = true
+            indonesiaNews = {
+              NewConfirmed: element.NewConfirmed,
+              TotalConfirmed: element.TotalConfirmed,
+              NewDeaths: element.NewDeaths,
+              TotalDeaths: element.TotalDeaths,
+              NewRecovered: element.NewRecovered,
+              TotalRecovered: element.TotalRecovered
+            }
           }
+        })
+        if (kondisi === true) res.status(200).json(indonesiaNews)
+        else {
+          this.fetchCovidNews()
         }
-      });
-      res.status(200).json(indonesiaNews)
-    } catch(error){
-      next(error)
-    }
+      })
+      .catch(error => next(error))
   }
 
   static async domesticNews(req, res, next) {
