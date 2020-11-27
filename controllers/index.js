@@ -53,6 +53,7 @@ class Controller {
   static googleLogin(req, res, next) {
 
   }
+
   static async fetchNews(req, res, next) {
     try{
       const news = await axios({
@@ -67,7 +68,7 @@ class Controller {
           thumbnail_standard: element.thumbnail_standard
         }
         return obj
-      });
+      })
       res.status(200).json(data[Math.floor(Math.random()*data.length)])
     } catch(error){
       next(error)
