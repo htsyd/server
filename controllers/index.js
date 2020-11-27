@@ -2,6 +2,8 @@ const { User } = require('../models')
 const PasswordHelper = require('../helpers/passwordhelper')
 const JwtHelper = require('../helpers/jwthelper')
 const axios = require('axios')
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class Controller {
 
@@ -51,7 +53,42 @@ class Controller {
   }
 
   static googleLogin(req, res, next) {
-
+    let payload;
+    // console.log(req.body);
+    client.verifyIdToken({
+      idToken: req.body.googleToken,
+      audience: process.env.GOOGLE_CLIENT_ID
+    })
+    .then(ticket => {
+      payload = ticket.getPayload()
+      // console.log(payload.email,'<<< INI COY');
+      return User.findOne({
+        where: {
+          email: payload.email
+        }
+      })
+      .then(user => {
+        if (user) {
+          // console.log(user);
+          return user
+        } else {
+          
+          return User.create({
+            email: payload.email,
+            password: process.env.GOOGLE_PASS,
+            name: payload.name
+          })
+        }
+      })
+      .then(user => {
+        const access_token = JwtHelper.generateToken({ email: user.email, id: user.id })
+        console.log(access_token);
+        res.status(200).json({access_token})
+      })
+    })
+    .catch(err => {
+      res.status(500).json({ msg:" Internal server error "})
+    })
   }
 
   static async fetchNews(req, res, next) {
@@ -61,11 +98,12 @@ class Controller {
         method: 'GET'
       })
       const data = news.data.results.map(element => {
+        console.log(element.multimedia[0][1]);
         const obj = {
           title: element.title,
           abstract: element.abstract,
           url: element.url,
-          thumbnail_standard: element.thumbnail_standard
+          thumbnail_standard: element.multimedia
         }
         return obj
       })
